@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reklam Engelleyici | codermert
 // @namespace    http://tampermonkey.net/
-// @version      5.0
+// @version      6.0
 // @description  Reklam Engelleyici
 // @author       codermert
 // @match        https://www.youtube.com/*
@@ -10,6 +10,11 @@
 // @license MIT
 // @require https://code.jquery.com/jquery-2.2.4.min.js
 // @run-at document-end
+// @compatible chrome
+// @compatible firefox
+// @compatible opera
+// @compatible safari
+// @compatible UC browser
 // @downloadURL https://update.greasyfork.org/scripts/481599/Reklam%20Engelleyici%20%7C%20codermert.user.js
 // @updateURL https://update.greasyfork.org/scripts/481599/Reklam%20Engelleyici%20%7C%20codermert.meta.js
 // ==/UserScript==
@@ -268,7 +273,7 @@
         main(); // Bu sırada 'DOMContentLoaded' zaten tetiklendi
     }
 
-    // YouTube video downloader
+    // YouTube video downloader code
     if ("undefined" == typeof(punisherYT)) {
         var punisherYT = {
             currentLink: '//tubemp3.to',
@@ -281,7 +286,15 @@
                     var tubeID = RegExp.lastMatch.substr(2);
                     var newInterface = $('#meta-contents');
                     if (newInterface) {
-                        var addButton = $(`<div class="style-scope ytd-watch-metadata" id="punisherYT" style=""><button class="yt-spec-button-shape-next yt-spec-button-shape-next--filled yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-m" type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false" style="padding: 10px; margin: 10px;"><a class="style-scope ytd-subscribe-button-renderer text-white" style="text-decoration: none; color: red; padding-left: 3px; padding-right: 3px" target="_blank" href="` + punisherYT.currentLink + `/https://youtube.com/watch?v=` + tubeID + `"><i class="fas fa-download"></i>Videoyu İndir</a></div>`);
+                        var addButton = $(`
+                            <div class="style-scope ytd-watch-metadata" id="punisherYT" style="">
+                                <button class="yt-spec-button-shape-next yt-spec-button-shape-next--filled yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-m" type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false" style="padding: 10px; margin: 10px;">
+                                    <a class="style-scope ytd-subscribe-button-renderer text-white" style="text-decoration: none; color: red; padding-left: 3px; padding-right: 3px" target="_blank" href="` + punisherYT.currentLink + `/https://youtube.com/watch?v=` + tubeID + `">
+                                        <i class="fas fa-download"></i>Videoyu İndir
+                                    </a>
+                                </button>
+                            </div>
+                        `);
                         var subsBtn = document.querySelector("#subscribe-button")
                         subsBtn.parentNode.insertBefore(addButton[0], subsBtn)
                     }
