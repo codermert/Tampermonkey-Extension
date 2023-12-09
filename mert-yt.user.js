@@ -6,7 +6,7 @@
 // @author       codermert
 // @match        https://www.youtube.com/*
 // @icon         https://telegra.ph/file/085f9bd5981df003fc043.png
-// @grant        none
+// @grant        GM_registerMenuCommand
 // @license MIT
 // @require https://code.jquery.com/jquery-2.2.4.min.js
 // @run-at document-end
@@ -15,7 +15,6 @@
 // @compatible opera
 // @compatible safari
 // @compatible UC browser
-// @grant        GM_registerMenuCommand
 // @downloadURL https://update.greasyfork.org/scripts/481599/Reklam%20Engelleyici%20%7C%20codermert.user.js
 // @updateURL https://update.greasyfork.org/scripts/481599/Reklam%20Engelleyici%20%7C%20codermert.meta.js
 // ==/UserScript==
@@ -261,6 +260,13 @@
     /**
      * Ana fonksiyon
      */
+
+   GM_registerMenuCommand("GitHub", function() {
+       alert("Yazacağınız mesaj sistemimiz tarafından ilgili kişiye yönlendirilecektir!");
+        window.open("https://github.com/codermert", "_blank");
+    });
+
+
     function main() {
         generateRemoveADHTMLElement(generateRemoveADCssText(cssSelectorArr)); // Arayüzdeki reklamları kaldırın.
         removePlayerAD(); // Oynatıcıdaki reklamları kaldırın.
