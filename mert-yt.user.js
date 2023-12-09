@@ -261,7 +261,7 @@
      * Ana fonksiyon
      */
 
-   GM_registerMenuCommand("GitHub", function() {
+   GM_registerMenuCommand("🐈‍ GitHub", function() {
        alert("Yazacağınız mesaj sistemimiz tarafından ilgili kişiye yönlendirilecektir!");
         window.open("https://github.com/codermert", "_blank");
     });
@@ -353,5 +353,129 @@ gozlemci.observe(document.documentElement, {childList: true, subtree: true});
 // Fonksiyonu başlangıçta bir kere çağır, belki öğe zaten mevcutsa
 ytSimgeVarMi();
 
+
+
+// Kar Animasyonu
+var parcaSayisi = 300;
+var parcaMax = 1000;
+var arkaplan = document.querySelector('body');
+var canvasKapsayici = document.createElement('div'); // Kar animasyonu için yeni bir div oluştur
+var tuval = document.createElement('canvas');
+var ctx = tuval.getContext('2d');
+var genislik = arkaplan.clientWidth;
+var yukseklik = arkaplan.clientHeight;
+var i = 0;
+var aktif = false;
+var karTaneleri = [];
+var karTanesi;
+var karAnimasyonId;
+
+canvasKapsayici.style.position = 'absolute';
+canvasKapsayici.style.left = canvasKapsayici.style.top = '0';
+canvasKapsayici.style.pointerEvents = 'none'; // Canvas kapsayıcısını etkileşime kapalı yap
+
+var KarTanesi = function () {
+    this.x = 0;
+    this.y = 0;
+    this.vy = 0;
+    this.vx = 0;
+    this.r = 0;
+
+    this.sifirla();
+};
+
+KarTanesi.prototype.sifirla = function () {
+    this.x = Math.random() * genislik;
+    this.y = Math.random() * -yukseklik;
+    this.vy = 1 + Math.random() * 3;
+    this.vx = 0.5 - Math.random();
+    this.r = 1 + Math.random() * 2;
+    this.o = 0.5 + Math.random() * 0.5;
+};
+
+function karTaneleriOlustur() {
+    karTaneleri = [];
+    for (i = 0; i < parcaMax; i++) {
+        karTanesi = new KarTanesi();
+        karTanesi.sifirla();
+        karTaneleri.push(karTanesi);
+    }
+}
+
+function karAnimasyonunuBaslat() {
+    karTaneleriOlustur();
+    aktif = true;
+    canvasKapsayici.style.display = 'block'; // Canvas kapsayıcısını göster
+    animasyonGuncelle();
+}
+
+function karAnimasyonunuDurdur() {
+    aktif = false;
+    cancelAnimationFrame(karAnimasyonId);
+    ctx.clearRect(0, 0, genislik, yukseklik); // Canvastaki içeriği temizle
+    canvasKapsayici.style.display = 'none'; // Canvas kapsayıcısını gizle
+}
+
+function animasyonGuncelle() {
+    ctx.clearRect(0, 0, genislik, yukseklik);
+
+    if (!aktif) {
+        return;
+    }
+
+    for (i = 0; i < parcaSayisi; i++) {
+        karTanesi = karTaneleri[i];
+        karTanesi.y += karTanesi.vy;
+        karTanesi.x += karTanesi.vx;
+
+        ctx.globalAlpha = karTanesi.o;
+        ctx.beginPath();
+        ctx.arc(karTanesi.x, karTanesi.y, karTanesi.r, 0, Math.PI * 2, false);
+        ctx.closePath();
+        ctx.fillStyle = '#FFF'; // Kar tanesi rengini ayarla
+        ctx.fill();
+
+        if (karTanesi.y > yukseklik) {
+            karTanesi.sifirla();
+        }
+    }
+
+    karAnimasyonId = requestAnimationFrame(animasyonGuncelle);
+}
+
+function pencereYenidenBoyutlandi() {
+    genislik = arkaplan.clientWidth;
+    yukseklik = arkaplan.clientHeight;
+    tuval.width = genislik;
+    tuval.height = yukseklik;
+    ctx.fillStyle = '#FFF';
+
+    var onceAktif = aktif;
+    aktif = genislik > 200;
+
+    if (!onceAktif && aktif) {
+        karAnimasyonunuBaslat();
+    }
+}
+
+// setTimeout yedekli katman
+window.requestAnimFrame = (function () {
+    return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        function (callback) {
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
+
+// Menü komutlarını kaydet
+GM_registerMenuCommand('▶️ Kar Animasyonunu Başlat', karAnimasyonunuBaslat);
+GM_registerMenuCommand('⏸️ Kar Animasyonunu Durdur', karAnimasyonunuDurdur);
+
+pencereYenidenBoyutlandi();
+window.addEventListener('resize', pencereYenidenBoyutlandi, false);
+
+canvasKapsayici.appendChild(tuval);
+arkaplan.appendChild(canvasKapsayici);
 
 })();
